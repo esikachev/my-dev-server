@@ -1,0 +1,22 @@
+language: python
+
+cache:
+    pip
+
+python:
+  - 2.7
+  - pypy
+
+before_install:
+  - pip install tox
+
+env:
+    - pep8-unit
+
+matrix:
+  exclude:
+    - python: 2.7
+      env: pep8
+
+script:
+  - tox -e pep8
