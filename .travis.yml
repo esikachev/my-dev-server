@@ -20,3 +20,4 @@ matrix:
 
 script:
   - tox -e pep8
+  - tox -e py27
