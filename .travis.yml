@@ -11,7 +11,7 @@ before_install:
   - pip install tox
 
 env:
-    - pep8-unit
+  - pep8-unit
 
 matrix:
   exclude:
