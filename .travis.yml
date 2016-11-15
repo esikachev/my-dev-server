@@ -5,7 +5,6 @@ cache:
 
 python:
   - 2.7
-  - pypy
 
 before_install:
   - pip install tox
