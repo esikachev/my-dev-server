@@ -8,9 +8,13 @@ python:
 
 before_install:
   - pip install tox
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS my_dev;'
+
+services:
+  - mysql
 
 env:
-  - pep8-unit
+  - all-tests
 
 matrix:
   exclude:
@@ -18,5 +22,6 @@ matrix:
       env: pep8
 
 script:
-  - tox -e pep8
+  - tox -e venv -- my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf
   - tox -e py27
+  - tox -e pep8
