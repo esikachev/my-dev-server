@@ -8,7 +8,7 @@ class User(base.Base):
     __tablename__ = 'users'
 
     id = sql.Column(sql.Integer, primary_key=True)
-    username = sql.Column(sql.String(length=15))
+    username = sql.Column(sql.String(length=10))
     email = sql.Column(sql.String(length=30))
 
     def __init__(self, username=None, email=None):
