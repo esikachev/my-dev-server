@@ -9,8 +9,11 @@ python:
 before_install:
   - pip install tox
 
+services:
+  - mysql
+
 env:
-  - pep8-unit
+  - all-tests
 
 matrix:
   exclude:
@@ -20,3 +23,4 @@ matrix:
 script:
   - tox -e pep8
   - tox -e py27
+  - tox -e venv -- my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf

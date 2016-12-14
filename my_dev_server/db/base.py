@@ -1,5 +1,7 @@
 from oslo_config import cfg
 import sqlalchemy as sql
+from sqlalchemy import orm
+from sqlalchemy.ext import declarative as dec
 
 from my_dev_server import config
 
@@ -8,15 +10,17 @@ config.parse_config()
 CONF = cfg.CONF
 
 
-class Connect(object):
-    def __init__(self):
-        '''Returns a connection and a metadata object'''
+url = CONF.db_url
 
-        # We connect with the help of the DB URL
-        url = CONF.db_url
+engine = sql.create_engine(url)
 
-        # The return value of create_engine() is our connection object
-        self.connection = sql.create_engine(url)
+session = orm.scoped_session(orm.sessionmaker(autocommit=False,
+                                              autoflush=False,
+                                              bind=engine))
+Base = dec.declarative_base()
+Base.query = session.query_property()
 
-        # We then bind the connection to MetaData()
-        self.metadata = sql.MetaData(bind=self.connection, reflect=True)
+
+def init_db():
+    import my_dev_server.db.models
+    Base.metadata.create_all(bind=engine)
