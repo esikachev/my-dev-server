@@ -28,16 +28,8 @@ def login():
             return('User exists')
 
 
-@app.route('/users/<id>', methods=['GET', 'POST', 'DELETE'])
+@app.route('/users/<id>', methods=['GET', 'DELETE'])
 def user_changes(id):
-    if request.method == 'POST':
-        # POST request for updating user
-        new_user = User(username=request.json["username"],
-                        email=request.json['email'])
-        if new_user.username in User.query.all():
-            session.add(new_user)
-            session.commit()
-        return str(new_user.id)
     if request.method == 'GET':
         user = User.query.filter_by(id=id).first()
         return jsonify(user.to_json())
