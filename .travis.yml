@@ -1,8 +1,4 @@
 language: python
-python:
-    - pep8
-    - py27
-    - functional
 
 before_install:
   - pip install tox
