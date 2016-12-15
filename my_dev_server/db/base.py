@@ -4,13 +4,19 @@ from sqlalchemy import orm
 from sqlalchemy.ext import declarative as dec
 
 from my_dev_server import config
+from my_dev_server import logger
+
+LOG = logger.logger
+LOG.addHandler(logger.console)
+
 
 config.parse_config()
 
 CONF = cfg.CONF
 
-
 url = CONF.db_url
+
+LOG.info("DB URL: %s" % url)
 
 engine = sql.create_engine(url)
 
