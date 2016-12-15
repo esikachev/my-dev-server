@@ -1,11 +1,5 @@
 language: python
 
-cache:
-    pip
-
-python:
-  - 2.7
-
 before_install:
   - pip install tox
   - mysql -e 'CREATE DATABASE IF NOT EXISTS my_dev;'
@@ -13,15 +7,17 @@ before_install:
 services:
   - mysql
 
-env:
-  - all-tests
-
 matrix:
-  exclude:
+  include:
     - python: 2.7
-      env: pep8
+      env: TOX_ENV=pep8
+    - python: 2.7
+      env: TOX_ENV=py27
+    - python: 2.7
+      env: TOX_ENV=venv
 
 script:
-  - tox -e venv -- my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf
-  - tox -e py27
-  - tox -e pep8
+  - ARGS=''
+  - if [[ $TOX_ENV == 'venv' ]]; then ARGS='my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf'; fi
+  - tox -e "${TOX_ENV}" -- $ARGS
+  
