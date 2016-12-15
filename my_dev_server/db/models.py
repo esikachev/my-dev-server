@@ -44,3 +44,8 @@ class Ssh(base.Base):
 
     def __repr__(self):
         return '<SSH %r>' % (self.id)
+
+    def to_json(self):
+        return dict(user_id=self.user_id,
+                    alias=self.alias,
+                    host=self.host)
