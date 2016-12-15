@@ -4,6 +4,7 @@ import os
 import traceback
 
 from oslo_config import cfg
+
 from my_dev_server import config
 
 config.parse_config()
