@@ -1,6 +1,9 @@
 import sqlalchemy as sql
 
 from my_dev_server.db import base
+from my_dev_server import logger
+
+LOG = logger.logger
 
 
 class User(base.Base):
