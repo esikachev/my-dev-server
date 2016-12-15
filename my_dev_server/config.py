@@ -8,7 +8,7 @@ CONF = cfg.CONF
 
 db_opts = [
     cfg.StrOpt('db_url',
-               default='mysql+pymysql://root:r00tme@localhost/my_dev',
+               default='mysql+pymysql://root@localhost/my_dev',
                help='Url of DB for connection.')
 ]
 
