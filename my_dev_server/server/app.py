@@ -13,9 +13,9 @@ app = Flask(__name__)
 @app.route('/users', methods=['POST'])
 def login():
     if request.method == 'POST':
-        #POST request for creating user
+        # POST request for creating user
         new_user = models.User(username=request.json["username"],
-                        email=request.json['email'])
+                               email=request.json['email'])
 
         user_exist = (
             models.User.query.filter_by(username=new_user.username).all() or
