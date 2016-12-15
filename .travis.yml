@@ -11,7 +11,16 @@ before_install:
 services:
   - mysql
 
+matrix:
+  include:
+    - python: 2.7
+      env: TOX_ENV=pep8
+    - python: 2.7
+      env: TOX_ENV=py27
+    - python: 2.7
+      env: TOX_ENV=venv
+
 script:
-  - if [[ $TRAVIS_PYTHON_VERSION == 'pep8' ]]; tox -e pep8; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 'py27' ]]; tox -e py27; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 'functional' ]]; tox -e venv -- my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf; fi
+  - ARGS=''
+  - if [[ $TOX_ENV == 'venv' ]]; then ARGS='my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf''; fi
+  - tox -e "${TOX_ENV}" -- $ARGS
