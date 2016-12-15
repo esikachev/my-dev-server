@@ -18,10 +18,10 @@ matrix:
 
 script:
   - ARGS=''
-  - if [[ $TOX_ENV == 'venv' ]]; \
-    then \
-      ARGS='my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf'
-      sed -i '/log_dir=/c\log_dir=/home/ubuntu' etc/my-dev-server/my-dev-server.conf
+  - if [[ $TOX_ENV == 'venv' ]]; 
+    then 
+      ARGS='my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf';
+      sed -i '/log_dir=/c\log_dir=/home/ubuntu' etc/my-dev-server/my-dev-server.conf;
     fi
   - tox -e "${TOX_ENV}" -- $ARGS
   
