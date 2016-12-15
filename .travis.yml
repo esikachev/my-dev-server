@@ -17,6 +17,7 @@ matrix:
       env: TOX_ENV=venv
 
 script:
+  - pwd
   - ARGS=''
   - if [[ $TOX_ENV == 'venv' ]]; 
     then 
