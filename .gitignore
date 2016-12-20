@@ -59,3 +59,6 @@ target/
 
 # IDE
 .idea/
+
+# Configs
+etc/my-dev-server/my-dev-server.conf
