@@ -20,7 +20,7 @@ mydev = Flask(__name__)
 USER_EXIST_MSG = "User exist"
 
 
-@mydev.route('/users', methods=['POST'])
+@mydev.route('/users', methods=['POST'], strict_slashes=False)
 def user_create():
     LOG.info('%s %s %s' % (str(request.method), str(request.json["username"]),
                            str(request.json["email"])))
@@ -38,7 +38,7 @@ def user_create():
         LOG.error(error_msg)
         return error_msg
 
-    if email_esist:
+    if email_exist:
         error_msg = "%s with email: %s" % (USER_EXIST_MSG,
                                            request.json["email"])
         LOG.error(error_msg)
@@ -51,20 +51,21 @@ def user_create():
     return user_json
 
 
-@mydev.route('/users/<id>', methods=['GET'])
+@mydev.route('/users/<id>', methods=['GET'], strict_slashes=False)
 def user_get(id):
     LOG.info('%s %s' % (request.method, id))
     user = models.User.query.filter_by(id=id).first()
     return jsonify(user.to_json())
 
 
-@mydev.route('/users/<id>', methods=['DELETE'])
+@mydev.route('/users/<id>', methods=['DELETE'], strict_slashes=False)
 def user_delete(id):
     LOG.info('%s %s' % (request.method, id))
     models.User.query.filter_by(id=id).delete()
     base.session.commit()
+    return '200'
 
 
 def main():
-    mydev.run(debug=True)
+    mydev.run(debug=True, host='0.0.0.0')
 
