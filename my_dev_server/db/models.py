@@ -11,12 +11,14 @@ class User(base.Base):
     __tablename__ = 'users'
 
     id = sql.Column(sql.Integer, primary_key=True)
-    username = sql.Column(sql.String(length=10))
-    email = sql.Column(sql.String(length=30))
+    username = sql.Column(sql.String(length=10), nullable=False)
+    email = sql.Column(sql.String(length=30), nullable=False)
+    password = sql.Column(sql.String(length=30), nullable=False)
 
-    def __init__(self, username=None, email=None):
+    def __init__(self, username=None, email=None, password=None):
         self.username = username
         self.email = email
+        self.password = password
 
     def __repr__(self):
         return '<User %r>' % (self.username)
