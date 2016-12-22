@@ -17,13 +17,13 @@ CONF = cfg.CONF
 
 mydev = Flask(__name__)
 
-USER_EXIST_MSG="User exist"
+USER_EXIST_MSG = "User exist"
 
 
 @mydev.route('/users', methods=['POST'])
 def user_create():
     LOG.info('%s %s %s' % (str(request.method), str(request.json["username"]),
-                         str(request.json["email"])))
+                           str(request.json["email"])))
     new_user = models.User(username=request.json["username"],
                            email=request.json['email'])
 
@@ -33,14 +33,14 @@ def user_create():
         models.User.query.filter_by(email=new_user.email).all())
 
     if username_exist:
-        error_msg="%s with username: %s" % (USER_EXIST_MSG,
-                                            request.json["username"])
+        error_msg = "%s with username: %s" % (USER_EXIST_MSG,
+                                              request.json["username"])
         LOG.error(error_msg)
         return error_msg
 
     if email_esist:
-        error_msg="%s with email: %s" % (USER_EXIST_MSG,
-                                         request.json["email"])
+        error_msg = "%s with email: %s" % (USER_EXIST_MSG,
+                                           request.json["email"])
         LOG.error(error_msg)
         return error_msg
 
