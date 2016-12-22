@@ -21,6 +21,11 @@ class User(base.Base):
     def __repr__(self):
         return '<User %r>' % (self.username)
 
+    def to_json(self):
+        return dict(id=self.id,
+                    username=self.username,
+                    email=self.email)
+
 
 class Ssh(base.Base):
     __tablename__ = 'ssh'
@@ -42,3 +47,8 @@ class Ssh(base.Base):
 
     def __repr__(self):
         return '<SSH %r>' % (self.id)
+
+    def to_json(self):
+        return dict(user_id=self.user_id,
+                    alias=self.alias,
+                    host=self.host)

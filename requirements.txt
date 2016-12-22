@@ -7,4 +7,5 @@ pbr>=1.6 # Apache-2.0
 pymysql
 SQLAlchemy<1.1.0,>=1.0.10 # MIT
 oslo.config
-oslo.log
+Flask>=0.8
+requests>=0.11.1
