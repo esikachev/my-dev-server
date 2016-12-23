@@ -1,3 +1,4 @@
+from datetime import datetime
 import sqlalchemy as sql
 
 from my_dev_server.db import base
@@ -13,10 +14,12 @@ class User(base.Base):
     id = sql.Column(sql.Integer, primary_key=True)
     username = sql.Column(sql.String(length=10))
     email = sql.Column(sql.String(length=30))
+    registered_on = db.Column('registered_on' , db.DateTime)
 
     def __init__(self, username=None, email=None):
         self.username = username
         self.email = email
+        self.registered_on = datetime.utcnow()
 
     def __repr__(self):
         return '<User %r>' % (self.username)
