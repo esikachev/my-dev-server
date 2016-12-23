@@ -14,7 +14,7 @@ class User(base.Base):
     id = sql.Column(sql.Integer, primary_key=True)
     username = sql.Column(sql.String(length=10))
     email = sql.Column(sql.String(length=30))
-    registered_on = db.Column('registered_on' , db.DateTime)
+    registered_on = sql.Column('registered_on', sql.DateTime)
 
     def __init__(self, username=None, email=None):
         self.username = username
