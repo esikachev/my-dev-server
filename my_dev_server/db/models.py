@@ -26,7 +26,8 @@ class User(base.Base):
     def to_json(self):
         return dict(id=self.id,
                     username=self.username,
-                    email=self.email)
+                    email=self.email,
+                    password=self.password)
 
 
 class Ssh(base.Base):
