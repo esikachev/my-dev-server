@@ -12,14 +12,17 @@ class User(base.Base):
     __tablename__ = 'users'
 
     id = sql.Column(sql.Integer, primary_key=True)
-    username = sql.Column(sql.String(length=10))
-    email = sql.Column(sql.String(length=30))
+    
+    username = sql.Column(sql.String(length=10), nullable=False)
+    email = sql.Column(sql.String(length=30), nullable=False)
+    password = sql.Column(sql.String(length=30), nullable=False)
     registered_on = sql.Column('registered_on', sql.DateTime)
 
-    def __init__(self, username=None, email=None):
+    def __init__(self, username=None, email=None, password=None):
         self.username = username
         self.email = email
         self.registered_on = datetime.utcnow()
+        self.password = password
 
     def __repr__(self):
         return '<User %r>' % (self.username)
@@ -27,7 +30,8 @@ class User(base.Base):
     def to_json(self):
         return dict(id=self.id,
                     username=self.username,
-                    email=self.email)
+                    email=self.email,
+                    password=self.password)
 
 
 class Ssh(base.Base):
