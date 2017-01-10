@@ -22,10 +22,13 @@ USER_EXIST_MSG = "User exist"
 
 @mydev.route('/users', methods=['POST'], strict_slashes=False)
 def user_create():
-    LOG.info('%s %s %s' % (str(request.method), str(request.json["username"]),
-                           str(request.json["email"])))
+    LOG.info('%s %s %s %s' % (str(request.method),
+                              str(request.json["username"]),
+                              str(request.json["email"]),
+                              str(request.json["password"])))
     new_user = models.User(username=request.json["username"],
-                           email=request.json['email'])
+                           email=request.json['email'],
+                           password=request.json["password"])
 
     username_exist = (
         models.User.query.filter_by(username=new_user.username).all())
