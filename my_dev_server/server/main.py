@@ -70,5 +70,5 @@ def user_delete(id):
 
 
 def main():
-    mydev.run(debug=True, host='0.0.0.0')
+    mydev.run(debug=CONF.debug, host=CONF.host)
 
