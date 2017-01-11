@@ -12,9 +12,9 @@ class TestUsers(testtools.TestCase):
             "email": email,
             "password": password
         }
-        usr = requests.post(url, json=data)
-        self.assertEqual(expected_code, usr.status_code)
-        return usr.json()
+        user = requests.post(url, json=data)
+        self.assertEqual(expected_code, user.status_code)
+        return user
 
     def test_create_delete_user(self):
         url = 'http://localhost:5000/users'
@@ -27,7 +27,7 @@ class TestUsers(testtools.TestCase):
         self.assertEqual(200, user.status_code)
         user = user.json()
         self.assertEqual(data['username'], user['username'])
-        self.assertEqual(data['email'], user['em@em.com1'])
+        self.assertEqual(data['email'], user['email'])
         self.assertEqual(data['password'], user['pass1'])
         url = 'http://localhost:5000/users/%s' % user['id']
         request = requests.delete(url)
@@ -77,10 +77,10 @@ class TestUsers(testtools.TestCase):
         self.assertEqual(200, new_ssh.status_code)
         new_ssh = new_ssh.json()
         self.assertEqual(data['user_id'], new_ssh['user_id'])
-        self.assertEqual(data['alias'], new_ssh['testa'])
-        self.assertEqual(data['host'], new_ssh['10.10.0.1'])
-        self.assertEqual(data['username'], new_ssh['testu'])
-        self.assertEqual(data['password'], new_ssh['testp'])
+        self.assertEqual(data['alias'], new_ssh['alias'])
+        self.assertEqual(data['host'], new_ssh['host'])
+        self.assertEqual(data['username'], new_ssh['username'])
+        self.assertEqual(data['password'], new_ssh['password'])
 
         url = 'http://localhost:5000/users/%s/ssh/%s' % (
             user['id'],

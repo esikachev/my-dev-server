@@ -33,4 +33,5 @@ script:
       sed -i '/log_dir=/c\log_dir=/home/travis/build/esikachev/my-dev-server' etc/my-dev-server/my-dev-server.conf;
     fi
   - tox -e "${TOX_ENV}" -- $ARGS
+  cat my-dev-server-logs
   
