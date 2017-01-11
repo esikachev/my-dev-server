@@ -27,6 +27,7 @@ script:
     then 
       ARGS='my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf';
       sed -i '/log_dir=/c\log_dir=/home/travis/build/esikachev/my-dev-server' etc/my-dev-server/my-dev-server.conf;
+      SKIP_TOX=true;
     fi
   - if [[ $TOX_ENV == 'functional-client' ]];
     then
