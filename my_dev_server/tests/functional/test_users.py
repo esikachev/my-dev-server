@@ -25,7 +25,9 @@ class TestUsers(testtools.TestCase):
         }
         user = requests.post(url, json=data)
         self.assertEqual(200, user.status_code)
-        request = requests.delete(user.json()['id'])
+        url = 'http://localhost:5000/users/%s'\
+              % user.json()['id']
+        request = requests.delete(url)
         self.assertEqual(200, request.status_code)
 
     def test_get_user(self):
@@ -37,5 +39,5 @@ class TestUsers(testtools.TestCase):
         url = 'http://localhost:5000/users/%s' % user['id']
         get_user = requests.get(url)
 
-        self.assertEqual(200, request.status_code)
+        self.assertEqual(200, get_user.status_code)
         self.assertEqual(user, get_user.json())
