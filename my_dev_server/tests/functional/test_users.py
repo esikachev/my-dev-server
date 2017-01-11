@@ -2,9 +2,10 @@ from requests import delete
 from requests import get
 from requests import exceptions as exc
 from requests import post
+import testtools
 
 
-class TestUsers(object):
+class TestUsers(testtools.TestCase):
 
     def _create_user(self, username, email, password,
                      expected_code=200):
