@@ -28,7 +28,7 @@ class TestUsers(testtools.TestCase):
         user = user.json()
         self.assertEqual(data['username'], user['username'])
         self.assertEqual(data['email'], user['email'])
-        self.assertEqual(data['password'], user['pass1'])
+        self.assertEqual(data['password'], user['password'])
         url = 'http://localhost:5000/users/%s' % user['id']
         request = requests.delete(url)
         self.assertEqual(200, request.status_code)
@@ -38,7 +38,7 @@ class TestUsers(testtools.TestCase):
             'test_user',
             'mail@g.ru',
             'pass'
-        )
+        ).json()
         url = 'http://localhost:5000/users/%s' % user['id']
         get_user = requests.get(url)
 
@@ -63,15 +63,15 @@ class TestUsers(testtools.TestCase):
             'test_user',
             'mail@g.ru',
             'pass'
-        )
+        ).json()
         data = {
-            "user_id": user['id'],
+            "user_id": user.json['id'],
             "alias": 'testa',
             "host": '10.10.0.1',
             "username": 'testu',
             "password": "testp"
         }
-        url = 'http://localhost:5000/users/%s/ssh' % user['id']
+        url = 'http://localhost:5000/users/%s/ssh' % user.json['id']
         new_ssh = requests.post(url, json=data)
 
         self.assertEqual(200, new_ssh.status_code)

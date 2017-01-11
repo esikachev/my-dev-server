@@ -25,6 +25,7 @@ script:
       sed -i '/log_dir=/c\log_dir=/home/travis/build/esikachev/my-dev-server' etc/my-dev-server/my-dev-server.conf;
       tox -e venv -- my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf;
       tmux new -d 'tox -e venv -- my-dev-server --config-file etc/my-dev-server/my-dev-server.conf >> my-dev-server-logs';
+      cat my-dev-server-logs
     fi
   - ARGS=''
   - if [[ $TOX_ENV == 'venv' ]]; 
@@ -33,5 +34,4 @@ script:
       sed -i '/log_dir=/c\log_dir=/home/travis/build/esikachev/my-dev-server' etc/my-dev-server/my-dev-server.conf;
     fi
   - tox -e "${TOX_ENV}" -- $ARGS
-  - cat my-dev-server-logs
   
