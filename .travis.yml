@@ -18,14 +18,14 @@ matrix:
     - python: 2.7
       env: TOX_ENV=migration
     - python: 2.7
-      env: TOX_ENV=functional
+      env: TOX_ENV=api
     - python: 2.7
       env: TOX_ENV=functional-client
 
 script:
   - ARGS=''
   - SKIP_TOX=false
-  - if [[ $TOX_ENV == 'functional' ]];
+  - if [[ $TOX_ENV == 'api' ]];
     then
       sed -i '/log_dir=/c\log_dir=/home/travis/build/esikachev/my-dev-server' etc/my-dev-server/my-dev-server.conf;
       tox -e venv -- my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf;

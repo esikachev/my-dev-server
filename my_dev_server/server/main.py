@@ -81,13 +81,12 @@ def create_ssh(user_id):
         username=request.json['username'],
         password=request.json['password'],
         alias=request.json['alias'],
-        host=request.json['host']
-    )
+        host=request.json['host'])
+
     # TODO (imenkov) here need to add checking that user authorized
     ssh_exist = models.Ssh.query.filter_by(
         host=new_ssh.host,
-        username=new_ssh.username
-    ).all()
+        username=new_ssh.username).all()
 
     if ssh_exist:
         error_msg = "%s with username: %s" % (SSH_EXIST_MSG,
@@ -108,8 +107,8 @@ def ssh_get(user_id, ssh_id):
     LOG.info('%s %s' % (request.method, ssh_id))
     ssh = models.Ssh.query.filter_by(
         user_id=user_id,
-        ssh_id=ssh_id
-    ).first()
+        id=ssh_id).first()
+
     return jsonify(ssh.to_json())
 
 
@@ -119,7 +118,7 @@ def ssh_delete(user_id, ssh_id):
     # TODO (imenkov) here need to add checking that user authorized
     LOG.info('%s %s' % (request.method, ssh_id))
     models.Ssh.query.filter_by(user_id=user_id,
-                               ssh_id=ssh_id).delete()
+                               id=ssh_id).delete()
     base.session.commit()
     return '200'
 
