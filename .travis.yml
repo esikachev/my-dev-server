@@ -37,6 +37,7 @@ script:
       tmux new -d 'tox -e venv -- my-dev-server --config-file etc/my-dev-server/my-dev-server.conf >> my-dev-server-logs';
       cd my-dev-client;
       tox -e functional;
+      cd -;
       SKIP_TOX=true;
     fi
   - if [[ $SKIP_TOX == false ]];
