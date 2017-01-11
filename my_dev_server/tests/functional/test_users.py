@@ -45,19 +45,6 @@ class TestUsers(testtools.TestCase):
         self.assertEqual(200, get_user.status_code)
         self.assertEqual(user, get_user.json())
 
-    def test_negative_create_exist_user(self):
-        self._create_user(
-            'test_user',
-            'mail@g.ru',
-            'pass'
-        )
-        self._create_user(
-            'test_user',
-            'mail@g.ru',
-            'pass',
-            expected_code=400
-        )
-
     def test_create_delete_ssh(self):
         user = self._create_user(
             'test_user',
@@ -65,13 +52,13 @@ class TestUsers(testtools.TestCase):
             'pass'
         ).json()
         data = {
-            "user_id": user.json['id'],
+            "user_id": user['id'],
             "alias": 'testa',
             "host": '10.10.0.1',
             "username": 'testu',
             "password": "testp"
         }
-        url = 'http://localhost:5000/users/%s/ssh' % user.json['id']
+        url = 'http://localhost:5000/users/%s/ssh' % user['id']
         new_ssh = requests.post(url, json=data)
 
         self.assertEqual(200, new_ssh.status_code)
