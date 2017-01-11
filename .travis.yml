@@ -36,10 +36,14 @@ script:
       tmux new -d 'tox -e venv -- my-dev-server --config-file etc/my-dev-server/my-dev-server.conf >> my-dev-server-logs';
       cd my-dev-client;
       tox -e functional;
-      SKIP_TOX=true
+      SKIP_TOX=true;
     fi
   - if [[ $SKIP_TOX == false ]];
     then
-      tox -e "${TOX_ENV}" -- $ARGS
+      tox -e "${TOX_ENV}" -- $ARGS;
     fi
-  
+
+after_script:
+  - if [ -f my-dev-server-logs ]; then
+      cat my-dev-server-logs;
+    fi  
