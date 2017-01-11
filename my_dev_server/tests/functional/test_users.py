@@ -1,7 +1,4 @@
-from requests import delete
-from requests import get
-from requests import exceptions as exc
-from requests import post
+import requests
 import testtools
 
 
