@@ -16,12 +16,18 @@ class TestUsers(testtools.TestCase):
         self.assertEqual(expected_code, user.status_code)
         return user
 
+    def _delete_user(self, user):
+        url = 'http://localhost:5000/users/%s' % user['id']
+        request = requests.delete(url)
+        self.assertEqual(200, request.status_code)
+
+
     def test_create_delete_user(self):
         url = 'http://localhost:5000/users'
         data = {
             "username": 'test_user1',
-            "email": "em@em.com1",
-            "password": 'pass1'
+            "email": "user@mail1.com",
+            "password": 'pass'
         }
         user = requests.post(url, json=data)
         self.assertEqual(200, user.status_code)
@@ -35,8 +41,8 @@ class TestUsers(testtools.TestCase):
 
     def test_get_user(self):
         user = self._create_user(
-            'test_user',
-            'mail@g.ru',
+            'test_user2',
+            'user@mail2.com',
             'pass'
         ).json()
         url = 'http://localhost:5000/users/%s' % user['id']
@@ -44,19 +50,21 @@ class TestUsers(testtools.TestCase):
 
         self.assertEqual(200, get_user.status_code)
         self.assertEqual(user, get_user.json())
+        self._delete_user(user)
+
 
     def test_create_delete_ssh(self):
         user = self._create_user(
-            'test_user',
-            'mail@g.ru',
+            'test_user3',
+            'user@mail3.com',
             'pass'
         ).json()
         data = {
             "user_id": user['id'],
-            "alias": 'testa',
+            "alias": 'test_alias',
             "host": '10.10.0.1',
-            "username": 'testu',
-            "password": "testp"
+            "username": 'test_username',
+            "password": "testp_pass"
         }
         url = 'http://localhost:5000/users/%s/ssh' % user['id']
         new_ssh = requests.post(url, json=data)
@@ -67,7 +75,6 @@ class TestUsers(testtools.TestCase):
         self.assertEqual(data['alias'], new_ssh['alias'])
         self.assertEqual(data['host'], new_ssh['host'])
         self.assertEqual(data['username'], new_ssh['username'])
-        self.assertEqual(data['password'], new_ssh['password'])
 
         url = 'http://localhost:5000/users/%s/ssh/%s' % (
             user['id'],
@@ -75,3 +82,4 @@ class TestUsers(testtools.TestCase):
         )
         request = requests.delete(url)
         self.assertEqual(200, request.status_code)
+        self._delete_user(user)

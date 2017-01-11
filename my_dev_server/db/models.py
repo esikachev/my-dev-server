@@ -13,7 +13,7 @@ class User(base.Base):
 
     id = sql.Column(sql.Integer, primary_key=True)
     
-    username = sql.Column(sql.String(length=10), nullable=False)
+    username = sql.Column(sql.String(length=20), nullable=False)
     email = sql.Column(sql.String(length=30), nullable=False)
     password = sql.Column(sql.String(length=30), nullable=False)
     registered_on = sql.Column('registered_on', sql.DateTime)
@@ -41,7 +41,7 @@ class Ssh(base.Base):
     user_id = sql.Column(sql.Integer, sql.ForeignKey('users.id'))
     alias = sql.Column(sql.String(length=30))
     host = sql.Column(sql.String(length=10))
-    username = sql.Column(sql.String(length=10))
+    username = sql.Column(sql.String(length=20))
     password = sql.Column(sql.String(length=30))
 
     def __init__(self, user_id=None, alias=None, host=None, username=None,
@@ -58,4 +58,6 @@ class Ssh(base.Base):
     def to_json(self):
         return dict(user_id=self.user_id,
                     alias=self.alias,
-                    host=self.host)
+                    host=self.host,
+                    username=self.username)
+

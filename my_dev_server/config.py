@@ -9,7 +9,7 @@ opts = [
     cfg.BoolOpt('debug', default=False, help='Enable debug for server'),
     cfg.StrOpt('host', default='0.0.0.0', help='Host address for running app'),
     cfg.StrOpt('db_url',
-               default='mysql+pymysql://root@localhost/my_dev',
+               default='mysql+pymysql://root:r00tme@localhost/my_dev',
                help='Url of DB for connection.'),
     cfg.StrOpt('log_dir',
                default='/var/log/my-dev-server',

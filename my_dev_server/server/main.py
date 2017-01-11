@@ -74,7 +74,7 @@ def user_delete(id):
     return '200'
 
 
-@mydev.route('/users/<user_id>/ssh')
+@mydev.route('/users/<user_id>/ssh', methods=['POST'], strict_slashes=False)
 def create_ssh(user_id):
     new_ssh = models.Ssh(
         user_id=user_id,
@@ -98,8 +98,7 @@ def create_ssh(user_id):
     base.session.add(new_ssh)
     base.session.commit()
 
-    ssh_json = jsonify(new_ssh.to_json())
-    return ssh_json
+    return jsonify(new_ssh.to_json())
 
 
 @mydev.route('/users/<user_id>/ssh/<ssh_id>',
