@@ -12,21 +12,21 @@ class TestUsers(testtools.TestCase):
             "email": email,
             "password": password
         }
-        usr = requests.post(url, data)
-        assert expected_code == usr.status_code
+        usr = requests.post(url, json=data)
+        self.assertEqual(expected_code, usr.status_code)
         return usr.json()
 
     def test_create_delete_user(self):
         url = 'http://localhost:5000/users'
         data = {
-            "username": 'test_user',
-            "email": "em@em.com",
-            "password": 'pass'
+            "username": 'test_user1',
+            "email": "em@em.com1",
+            "password": 'pass1'
         }
-        user = requests.post(url, data)
-        assert user.status_code == 200
+        user = requests.post(url, json=data)
+        self.assertEqual(200, user.status_code)
         request = requests.delete(user['id'])
-        assert request.status_code == 200
+        self.assertEqual(200, request.status_code)
 
     def test_get_user(self):
         user = self._create_user(
@@ -37,5 +37,5 @@ class TestUsers(testtools.TestCase):
         url = 'http://localhost:5000/users/%s' % user['id']
         get_user = requests.get(url)
 
-        assert get_user.status_code == 200
-        assert get_user.json() == user
+        self.assertEqual(200, requests.status_code)
+        self.assertEqual(user, get_user.json())
