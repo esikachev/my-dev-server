@@ -18,7 +18,6 @@ CONF = cfg.CONF
 mydev = Flask(__name__)
 
 USER_EXIST_MSG = "User exist"
-SSH_EXIST_MSG = "SSH exist"
 
 
 @mydev.route('/users', methods=['POST'], strict_slashes=False)
