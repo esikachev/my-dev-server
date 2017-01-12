@@ -9,4 +9,4 @@ SQLAlchemy<1.1.0,>=1.0.10 # MIT
 oslo.config
 oslo.utils
 Flask>=0.8
-requests>=0.11.1
+requests>=2.12.4

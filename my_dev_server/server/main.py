@@ -18,6 +18,7 @@ CONF = cfg.CONF
 mydev = Flask(__name__)
 
 USER_EXIST_MSG = "User exist"
+SSH_EXIST_MSG = "SSH exist"
 
 
 @mydev.route('/users', methods=['POST'], strict_slashes=False)
@@ -69,6 +70,55 @@ def user_get(id):
 def user_delete(id):
     LOG.info('%s %s' % (request.method, id))
     models.User.query.filter_by(id=id).delete()
+    base.session.commit()
+    return '200'
+
+
+@mydev.route('/users/<user_id>/ssh', methods=['POST'], strict_slashes=False)
+def create_ssh(user_id):
+    new_ssh = models.Ssh(
+        user_id=user_id,
+        username=request.json['username'],
+        password=request.json['password'],
+        alias=request.json['alias'],
+        host=request.json['host'])
+
+    # TODO (imenkov) here need to add checking that user authorized
+    ssh_exist = models.Ssh.query.filter_by(
+        host=new_ssh.host,
+        username=new_ssh.username).all()
+
+    if ssh_exist:
+        error_msg = "%s with username: %s" % (SSH_EXIST_MSG,
+                                              request.json["username"])
+        LOG.error(error_msg)
+        return error_msg
+
+    base.session.add(new_ssh)
+    base.session.commit()
+
+    return jsonify(new_ssh.to_json())
+
+
+@mydev.route('/users/<user_id>/ssh/<ssh_id>',
+             methods=['GET'], strict_slashes=False)
+def ssh_get(user_id, ssh_id):
+    # TODO (imenkov) here need to add checking that user authorized
+    LOG.info('%s %s' % (request.method, ssh_id))
+    ssh = models.Ssh.query.filter_by(
+        user_id=user_id,
+        id=ssh_id).first()
+
+    return jsonify(ssh.to_json())
+
+
+@mydev.route('/users/<user_id>/ssh/<ssh_id>',
+             methods=['DELETE'], strict_slashes=False)
+def ssh_delete(user_id, ssh_id):
+    # TODO (imenkov) here need to add checking that user authorized
+    LOG.info('%s %s' % (request.method, ssh_id))
+    models.Ssh.query.filter_by(user_id=user_id,
+                               id=ssh_id).delete()
     base.session.commit()
     return '200'
 
