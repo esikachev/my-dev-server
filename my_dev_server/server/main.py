@@ -69,9 +69,15 @@ def user_get(id):
 @mydev.route('/users/<id>', methods=['DELETE'], strict_slashes=False)
 def user_delete(id):
     LOG.info('%s %s' % (request.method, id))
-    models.User.query.filter_by(id=id).delete()
-    base.session.commit()
-    return '200'
+    user = models.User.query.filter_by(id=id).first()
+    if user is None:
+        error_msg = "Can not delete user %s: it does't exist" % id
+        LOG.error(error_msg)
+        return error_msg
+    else:
+        models.User.query.filter_by(id=id).delete()
+        base.session.commit()
+        return '200'
 
 
 @mydev.route('/users/<user_id>/ssh', methods=['POST'], strict_slashes=False)
