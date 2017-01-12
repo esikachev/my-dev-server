@@ -21,6 +21,6 @@ class Duplicate(MyDevException):
     message = "Resource already exist"
 
 
-class NotFound(Exception):
+class NotFound(MyDevException):
     message = 'Resource does not exist'
     status_code = 404

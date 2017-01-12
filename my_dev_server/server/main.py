@@ -63,7 +63,7 @@ def user_get(id):
     if user is None:
         error_msg = "User with id %s does not exist" % id
         LOG.error(error_msg)
-        raise exceptions.NotFound()
+        raise exceptions.NotFound(error_msg)
     return jsonify(user.to_json())
 
 
@@ -93,7 +93,7 @@ def create_ssh(user_id):
         error_msg = "%s with username: %s" % (SSH_EXIST_MSG,
                                               request.json["username"])
         LOG.error(error_msg)
-        return error_msg
+        raise exceptions.Duplicate(error_msg)
 
     base.session.add(new_ssh)
     base.session.commit()
