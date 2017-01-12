@@ -8,6 +8,7 @@ from my_dev_server.db import base
 from my_dev_server import config
 from my_dev_server.db import models
 from my_dev_server import logger
+from my_dev_server.server import exceptions
 
 LOG = logger.logger
 
@@ -40,13 +41,13 @@ def user_create():
         error_msg = "%s with username: %s" % (USER_EXIST_MSG,
                                               request.json["username"])
         LOG.error(error_msg)
-        return error_msg
+        raise exceptions.Duplicate(error_msg)
 
     if email_exist:
         error_msg = "%s with email: %s" % (USER_EXIST_MSG,
                                            request.json["email"])
         LOG.error(error_msg)
-        return error_msg
+        raise exceptions.Duplicate(error_msg)
 
     base.session.add(new_user)
     base.session.commit()
@@ -62,7 +63,7 @@ def user_get(id):
     if user is None:
         error_msg = "User with id %s does not exist" % id
         LOG.error(error_msg)
-        return error_msg
+        raise exceptions.NotFound()
     return jsonify(user.to_json())
 
 
@@ -121,6 +122,20 @@ def ssh_delete(user_id, ssh_id):
                                id=ssh_id).delete()
     base.session.commit()
     return '200'
+
+
+@mydev.errorhandler(exceptions.Duplicate)
+def handle_duplicate(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+
+@mydev.errorhandler(exceptions.NotFound)
+def handle_duplicate(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
 
 
 def main():
