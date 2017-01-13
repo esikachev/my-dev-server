@@ -74,10 +74,9 @@ def user_delete(id):
         error_msg = "Can not delete user %s: it does't exist" % id
         LOG.error(error_msg)
         return error_msg
-    else:
-        models.User.query.filter_by(id=id).delete()
-        base.session.commit()
-        return '200'
+    models.User.query.filter_by(id=id).delete()
+    base.session.commit()
+    return '200'
 
 
 @mydev.route('/users/<user_id>/ssh', methods=['POST'], strict_slashes=False)
