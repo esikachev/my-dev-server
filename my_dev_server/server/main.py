@@ -92,19 +92,19 @@ def user_delete(id):
 def create_ssh(user_id):
     new_ssh = models.Ssh(
         user_id=user_id,
-        username=request.json['username'],
-        password=request.json['password'],
+        ssh_username=request.json['ssh_username'],
+        ssh_password=request.json['ssh_password'],
         alias=request.json['alias'],
         host=request.json['host'])
 
     # TODO (imenkov) here need to add checking that user authorized
     ssh_exist = models.Ssh.query.filter_by(
         host=new_ssh.host,
-        username=new_ssh.username).all()
+        ssh_username=new_ssh.ssh_username).all()
 
     if ssh_exist:
-        error_msg = "%s with username: %s" % (SSH_EXIST_MSG,
-                                              request.json["username"])
+        error_msg = "%s for host: %s" % (SSH_EXIST_MSG,
+                                         request.json["host"])
         LOG.error(error_msg)
         raise exceptions.Duplicate(error_msg)
 

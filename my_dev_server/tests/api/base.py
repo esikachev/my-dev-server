@@ -43,8 +43,8 @@ class TestBase(testtools.TestCase):
             "user_id": user['id'],
             "alias": utils.rand_name(alias),
             "host": utils.rand_name(host),
-            "username": utils.rand_name(username),
-            "password": utils.rand_name(password)
+            "ssh_username": utils.rand_name(username),
+            "ssh_password": utils.rand_name(password)
         }
         url = self.url + '/users/%s/ssh' % user['id']
         new_ssh = requests.post(url, json=data)

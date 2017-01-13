@@ -41,16 +41,16 @@ class Ssh(base.Base):
     user_id = sql.Column(sql.Integer, sql.ForeignKey('users.id'))
     alias = sql.Column(sql.String(length=30))
     host = sql.Column(sql.String(length=10))
-    username = sql.Column(sql.String(length=20))
-    password = sql.Column(sql.String(length=30))
+    ssh_username = sql.Column(sql.String(length=20))
+    ssh_password = sql.Column(sql.String(length=30))
 
-    def __init__(self, user_id=None, alias=None, host=None, username=None,
-                 password=None):
+    def __init__(self, user_id=None, alias=None, host=None, ssh_username=None,
+                 ssh_password=None):
         self.user_id = user_id
         self.alias = alias
         self.host = host
-        self.username = username
-        self.password = password
+        self.ssh_username = ssh_username
+        self.ssh_password = ssh_password
 
     def __repr__(self):
         return '<SSH %r>' % (self.id)
@@ -60,5 +60,5 @@ class Ssh(base.Base):
                     user_id=self.user_id,
                     alias=self.alias,
                     host=self.host,
-                    username=self.username)
+                    ssh_username=self.ssh_username)
 

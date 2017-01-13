@@ -22,8 +22,8 @@ class TestSsh(TestBase):
             "user_id": user['id'],
             "alias": utils.rand_name('alias'),
             "host": utils.rand_name(''),
-            "username": utils.rand_name('username'),
-            "password": utils.rand_name('pass')
+            "ssh_username": utils.rand_name('username'),
+            "ssh_password": utils.rand_name('pass')
         }
         url = self.url + '/users/%s/ssh' % user['id']
         new_ssh = requests.post(url, json=data)
@@ -33,7 +33,7 @@ class TestSsh(TestBase):
         self.assertEqual(data['user_id'], new_ssh['user_id'])
         self.assertEqual(data['alias'], new_ssh['alias'])
         self.assertEqual(data['host'], new_ssh['host'])
-        self.assertEqual(data['username'], new_ssh['username'])
+        self.assertEqual(data['ssh_username'], new_ssh['ssh_username'])
 
         url = self.url + '/users/%s/ssh/%s' % (
             user['id'],
@@ -62,7 +62,7 @@ class TestSsh(TestBase):
         get_ssh = get_ssh.json()
         self.assertEqual(ssh['id'], get_ssh['id'])
         self.assertEqual(ssh['alias'], get_ssh['alias'])
-        self.assertEqual(ssh['username'], get_ssh['username'])
+        self.assertEqual(ssh['ssh_username'], get_ssh['ssh_username'])
         self.assertEqual(ssh['host'], get_ssh['host'])
 
         self._delete_ssh(user, ssh)
@@ -85,8 +85,8 @@ class TestSsh(TestBase):
             "user_id": user['id'],
             "alias": utils.rand_name('alias'),
             "host": utils.rand_name(''),
-            "username": utils.rand_name('username'),
-            "password": utils.rand_name('pass')
+            "ssh_username": utils.rand_name('username'),
+            "ssh_password": utils.rand_name('ssh_pass')
         }
         url = self.url + '/users/%s/ssh' % user['id']
         new_ssh = requests.post(url, json=data)
