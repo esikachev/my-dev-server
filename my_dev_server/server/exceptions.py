@@ -25,6 +25,7 @@ class NotFound(MyDevException):
     message = 'Resource does not exist'
     status_code = 404
 
+
 class LengthRequired(MyDevException):
     message = "Lenght of data not correct"
     status_code = 411
