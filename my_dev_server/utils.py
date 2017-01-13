@@ -16,8 +16,8 @@
 from oslo_utils import uuidutils
 
 
-def rand_name(name=''):
-    rand_data = uuidutils.generate_uuid()[:8]
+def rand_name(name='', length=8):
+    rand_data = uuidutils.generate_uuid()[:length]
     if name:
         return '%s-%s' % (name, rand_data)
     else:

@@ -1,7 +1,6 @@
 from flask import Flask
 from flask import jsonify
 from flask import request
-from sqlalchemy import exists
 from oslo_config import cfg
 
 from my_dev_server.db import base
@@ -9,6 +8,7 @@ from my_dev_server import config
 from my_dev_server.db import models
 from my_dev_server import logger
 from my_dev_server.server import exceptions
+from my_dev_server.server import common
 
 LOG = logger.logger
 
@@ -24,10 +24,23 @@ SSH_EXIST_MSG = "SSH exist"
 
 @mydev.route('/users', methods=['POST'], strict_slashes=False)
 def user_create():
-    LOG.info('%s %s %s %s' % (str(request.method),
-                              str(request.json["username"]),
-                              str(request.json["email"]),
-                              str(request.json["password"])))
+    try:
+        username = request.json["username"]
+        email = request.json["email"]
+        password = request.json["password"]
+        LOG.info('%s %s %s %s' % (str(request.method),
+                                  username,
+                                  email,
+                                  password))
+    except KeyError:
+        error_msg = "Please provide: username, password and email"
+        raise exceptions.BadRequest(error_msg)
+
+    common.check_user_correct(
+        str(username),
+        str(email),
+        str(password))
+
     new_user = models.User(username=request.json["username"],
                            email=request.json['email'],
                            password=request.json["password"])
@@ -72,7 +85,7 @@ def user_delete(id):
     LOG.info('%s %s' % (request.method, id))
     models.User.query.filter_by(id=id).delete()
     base.session.commit()
-    return '200'
+    return 'User was deleted successfully', 200
 
 
 @mydev.route('/users/<user_id>/ssh', methods=['POST'], strict_slashes=False)
@@ -97,7 +110,6 @@ def create_ssh(user_id):
 
     base.session.add(new_ssh)
     base.session.commit()
-
     return jsonify(new_ssh.to_json())
 
 
@@ -109,7 +121,6 @@ def ssh_get(user_id, ssh_id):
     ssh = models.Ssh.query.filter_by(
         user_id=user_id,
         id=ssh_id).first()
-
     return jsonify(ssh.to_json())
 
 
@@ -121,7 +132,7 @@ def ssh_delete(user_id, ssh_id):
     models.Ssh.query.filter_by(user_id=user_id,
                                id=ssh_id).delete()
     base.session.commit()
-    return '200'
+    return 'Ssh was deleted successfully', 200
 
 
 @mydev.errorhandler(exceptions.Duplicate)
@@ -132,6 +143,20 @@ def handle_duplicate(error):
 
 
 @mydev.errorhandler(exceptions.NotFound)
+def handle_duplicate(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+
+@mydev.errorhandler(exceptions.LengthRequired)
+def handle_duplicate(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+
+@mydev.errorhandler(exceptions.BadRequest)
 def handle_duplicate(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
