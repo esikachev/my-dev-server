@@ -2,7 +2,13 @@ language: python
 
 before_install:
   - pip install tox
-  - sudo apt-get install -y tmux
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]];
+    then
+      brew update;
+      brew install tmux;
+    else
+      sudo apt-get install -y tmux;
+    fi
   - git clone https://github.com/esikachev/my-dev-client
   - mysql -e 'CREATE DATABASE IF NOT EXISTS my_dev;'
 
