@@ -21,7 +21,7 @@ matrix:
       env: TOX_ENV=api
     - python: 2.7
       env: TOX_ENV=functional-client
-    - python: 2.7
+    - language: generic
       os: osx
       env: TOX_ENV=functional-client
 
