@@ -2,7 +2,10 @@ language: python
 
 before_install:
   - pip install tox
-  - sudo apt-get install -y tmux
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]];
+    then
+      sudo apt-get install -y tmux;
+    fi
   - git clone https://github.com/esikachev/my-dev-client
   - mysql -e 'CREATE DATABASE IF NOT EXISTS my_dev;'
 
@@ -20,6 +23,9 @@ matrix:
     - python: 2.7
       env: TOX_ENV=api
     - python: 2.7
+      env: TOX_ENV=functional-client
+    - language: generic
+      os: osx
       env: TOX_ENV=functional-client
 
 script:
