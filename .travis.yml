@@ -10,14 +10,19 @@ matrix:
   include:
     - python: 2.7
       env: TOX_ENV=pep8
+      sudo: required
     - python: 2.7
       env: TOX_ENV=py27
+      sudo: required
     - python: 2.7
       env: TOX_ENV=migration
+      sudo: required
     - python: 2.7
       env: TOX_ENV=api
+      sudo: required
     - python: 2.7
       env: TOX_ENV=functional-client
+      sudo: required
 
 script:
   - my-dev-ci-config/runner.sh
