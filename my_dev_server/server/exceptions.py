@@ -27,7 +27,7 @@ class NotFound(MyDevException):
 
 
 class LengthRequired(MyDevException):
-    message = "Lenght of data not correct"
+    message = "Length of data not correct"
     status_code = 411
 
 
