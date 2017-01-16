@@ -34,6 +34,7 @@ class TestSsh(TestBase):
         self.assertEqual(data['alias'], new_ssh['alias'])
         self.assertEqual(data['host'], new_ssh['host'])
         self.assertEqual(data['ssh_username'], new_ssh['ssh_username'])
+        self.assertEqual(data['ssh_password'], new_ssh['ssh_password'])
 
         url = self.url + '/users/%s/ssh/%s' % (
             user['id'],

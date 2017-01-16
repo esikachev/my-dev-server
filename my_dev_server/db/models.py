@@ -60,5 +60,6 @@ class Ssh(base.Base):
                     user_id=self.user_id,
                     alias=self.alias,
                     host=self.host,
-                    ssh_username=self.ssh_username)
+                    ssh_username=self.ssh_username,
+                    ssh_password=self.ssh_password)
 
