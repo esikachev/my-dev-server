@@ -20,7 +20,7 @@ matrix:
       env: TOX_ENV=functional-client
 
 script:
-  - my-dev-ci-config/runner.shg
+  - my-dev-ci-config/runner.sh
 
 after_script:
   - if [ -f my-dev-server-logs ]; then
