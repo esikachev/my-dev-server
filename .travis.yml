@@ -1,10 +1,7 @@
 language: python
 
 before_install:
-  - pip install tox
-  - sudo apt-get install -y tmux
-  - git clone https://github.com/esikachev/my-dev-client
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS my_dev;'
+  - git clone https://github.com/esikachev/my-dev-ci-config.git
 
 services:
   - mysql
@@ -23,35 +20,7 @@ matrix:
       env: TOX_ENV=functional-client
 
 script:
-  - ARGS=''
-  - SKIP_TOX=false
-  - if [[ $TOX_ENV == 'api' ]];
-    then
-      sed -i '/log_dir=/c\log_dir=/home/travis/build/esikachev/my-dev-server' etc/my-dev-server/my-dev-server.conf;
-      tox -e venv -- my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf;
-      tmux new -d 'tox -e venv -- my-dev-server --config-file etc/my-dev-server/my-dev-server.conf >> my-dev-server-logs';
-    fi
-  - if [[ $TOX_ENV == 'migration' ]]; 
-    then 
-      ARGS='my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf';
-      sed -i '/log_dir=/c\log_dir=/home/travis/build/esikachev/my-dev-server' etc/my-dev-server/my-dev-server.conf;
-      SKIP_TOX=true;
-    fi
-  - if [[ $TOX_ENV == 'functional-client' ]];
-    then
-      sed -i '/log_dir=/c\log_dir=/home/travis/build/esikachev/my-dev-server' etc/my-dev-server/my-dev-server.conf;
-      cat etc/my-dev-server/my-dev-server.conf;
-      tox -e venv -- my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf;
-      tmux new -d 'tox -e venv -- my-dev-server --config-file etc/my-dev-server/my-dev-server.conf >> my-dev-server-logs';
-      cd my-dev-client;
-      tox -e functional;
-      cd -;
-      SKIP_TOX=true;
-    fi
-  - if [[ $SKIP_TOX == false ]];
-    then
-      tox -e "${TOX_ENV}" -- $ARGS;
-    fi
+  - my-dev-ci-config/runner.shg
 
 after_script:
   - if [ -f my-dev-server-logs ]; then
