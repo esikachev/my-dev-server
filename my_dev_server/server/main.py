@@ -60,6 +60,8 @@ def user_get(id):
     LOG.info('%s %s' % (request.method, id))
     user = models.User.query.filter_by(id=id).first()
     if user is None:
+        user = models.User.query.filter_by(name=id).first()
+    if user is None:
         error_msg = "User with id %s does not exist" % id
         LOG.error(error_msg)
         return error_msg
