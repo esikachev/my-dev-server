@@ -1,10 +1,10 @@
 import requests
 
-from my_dev_server.tests.api.base import TestBase
+from my_dev_server.tests.api import base
 from my_dev_server import utils
 
 
-class TestUsers(TestBase):
+class TestUsers(base.Base):
 
     def test_create_delete_user(self):
         """Scenario:
@@ -104,7 +104,7 @@ class TestUsers(TestBase):
         """
         url = self.url + '/users'
         data = {
-            "username": 'un',
+            "username": utils.rand_name(length=2),
             "email": utils.rand_name('email'),
             "password": utils.rand_name('pass')
         }
@@ -116,7 +116,7 @@ class TestUsers(TestBase):
         data = {
             "username": utils.rand_name('username'),
             "email": utils.rand_name('email'),
-            "password": 'pass'
+            "password": utils.rand_name(length=4)
         }
         message = 'Password len required > 5'
         user = requests.post(url, json=data).json()
@@ -125,7 +125,7 @@ class TestUsers(TestBase):
 
         data = {
             "username": utils.rand_name('username'),
-            "email": 'un',
+            "email": utils.rand_name(length=2),
             "password": utils.rand_name('password')
         }
         message = 'Email len required > 4'

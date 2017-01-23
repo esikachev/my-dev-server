@@ -50,15 +50,9 @@ def user_create():
     email_exist = (
         models.User.query.filter_by(email=new_user.email).all())
 
-    if username_exist:
-        error_msg = "%s with username: %s" % (USER_EXIST_MSG,
-                                              request.json["username"])
-        LOG.error(error_msg)
-        raise exceptions.Duplicate(error_msg)
-
-    if email_exist:
-        error_msg = "%s with email: %s" % (USER_EXIST_MSG,
-                                           request.json["email"])
+    if username_exist or email_exist:
+        error_msg = "%s with: %s" % (USER_EXIST_MSG,
+                                     username or email)
         LOG.error(error_msg)
         raise exceptions.Duplicate(error_msg)
 
@@ -170,4 +164,3 @@ def handle_duplicate(error):
 
 def main():
     mydev.run(debug=CONF.debug, host=CONF.host)
-

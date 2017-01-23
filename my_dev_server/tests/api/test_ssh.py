@@ -1,10 +1,10 @@
 import requests
 
-from my_dev_server.tests.api.base import TestBase
+from my_dev_server.tests.api import base
 from my_dev_server import utils
 
 
-class TestSsh(TestBase):
+class TestSsh(base.Base):
 
     def test_create_delete_ssh(self):
         """Scenario:

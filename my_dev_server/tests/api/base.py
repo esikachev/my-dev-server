@@ -4,10 +4,10 @@ import testtools
 from my_dev_server import utils
 
 
-class TestBase(testtools.TestCase):
+class Base(testtools.TestCase):
 
     def setUp(self):
-        super(TestBase, self).setUp()
+        super(Base, self).setUp()
         self.url = 'http://localhost:5000'
 
     def _create_user(self, username, email, password,
