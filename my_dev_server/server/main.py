@@ -115,15 +115,19 @@ def create_ssh(user_id):
     return jsonify(new_ssh.to_json())
 
 
-@mydev.route('/users/<user_id>/ssh/<ssh_id>',
+@mydev.route('/users/<user_id>/ssh/<ssh>',
              methods=['GET'], strict_slashes=False)
-def ssh_get(user_id, ssh_id):
+def ssh_get(user_id, ssh):
     # TODO (imenkov) here need to add checking that user authorized
-    LOG.info('%s %s' % (request.method, ssh_id))
-    ssh = models.Ssh.query.filter_by(
-        user_id=user_id,
-        id=ssh_id).first()
-    return jsonify(ssh.to_json())
+    LOG.info('%s %s' % (request.method, ssh))
+    ssh_by_id = models.Ssh.query.filter_by(user_id=user_id,
+                                           id=ssh).first()
+    ssh_by_host = models.Ssh.query.filter_by(user_id=user_id,
+                                             host=ssh).first()
+
+    if ssh_by_host is not None:
+        return jsonify(ssh_by_host.to_json())
+    return jsonify(ssh_by_id.to_json())
 
 
 @mydev.route('/users/<user_id>/ssh/<ssh_id>',

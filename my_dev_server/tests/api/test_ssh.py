@@ -57,14 +57,22 @@ class TestSsh(base.Base):
             utils.rand_name('email'),
             utils.rand_name('pass'))
         ssh = self._create_ssh(user)
-        url = self.url + '/users/%s/ssh/%s' % (user['id'], ssh['id'])
-        get_ssh = requests.get(url)
+        get_ssh = self.get(user['id'], ssh['id'])
         self.assertEqual(200, get_ssh.status_code)
+
+        get_ssh_by_host = self.get(user['id'], ssh['host'])
+        self.assertEqual(200, get_ssh_by_host.status_code)
         get_ssh = get_ssh.json()
         self.assertEqual(ssh['id'], get_ssh['id'])
         self.assertEqual(ssh['alias'], get_ssh['alias'])
         self.assertEqual(ssh['ssh_username'], get_ssh['ssh_username'])
         self.assertEqual(ssh['host'], get_ssh['host'])
+
+        get_ssh_by_host = get_ssh_by_host.json()
+        self.assertEqual(ssh['id'], get_ssh_by_host['id'])
+        self.assertEqual(ssh['alias'], get_ssh_by_host['alias'])
+        self.assertEqual(ssh['ssh_username'], get_ssh_by_host['ssh_username'])
+        self.assertEqual(ssh['host'], get_ssh_by_host['host'])
 
         self._delete_ssh(user, ssh)
         self._delete_user(user)
@@ -97,3 +105,7 @@ class TestSsh(base.Base):
         self.assertEqual(400, exist_ssh.status_code)
         self._delete_ssh(user, new_ssh.json())
         self._delete_user(user)
+
+    def get(self, user_id, ssh_id):
+        url = self.url + '/users/%s/ssh/%s' % (user_id, ssh_id)
+        return  requests.get(url)
