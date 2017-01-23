@@ -58,9 +58,8 @@ def user_create():
 @mydev.route('/users/<id>', methods=['GET'], strict_slashes=False)
 def user_get(id):
     LOG.info('%s %s' % (request.method, id))
-    user = models.User.query.filter_by(id=id).first()
-    if user is None:
-        user = models.User.query.filter_by(name=id).first()
+    user = models.User.query.filter(or_(models.User.id == key,
+                                        models.User.username == key)).first()
     if user is None:
         error_msg = "User with id %s does not exist" % id
         LOG.error(error_msg)
