@@ -25,3 +25,8 @@ ability to use this repository like server for my-dev.
 
     $ tox -e venv -- my-dev-migrate --config-file etc/my-dev-server/my-dev-server.conf
 ..
+
+
+**Contacts**
+
+You can contact us via mailing list: ``my-dev@googlegroups.com``
