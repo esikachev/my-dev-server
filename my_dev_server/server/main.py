@@ -1,6 +1,8 @@
 from flask import Flask
 from flask import jsonify
 from flask import request
+from sqlalchemy import exists
+from sqlalchemy import or_
 from oslo_config import cfg
 
 from my_dev_server.db import base
@@ -66,9 +68,10 @@ def user_create():
 @mydev.route('/users/<id>', methods=['GET'], strict_slashes=False)
 def user_get(id):
     LOG.info('%s %s' % (request.method, id))
-    user = models.User.query.filter_by(id=id).first()
+    user = models.User.query.filter(or_(models.User.id == id,
+                                        models.User.username == id)).first()
     if user is None:
-        error_msg = "User with id %s does not exist" % id
+        error_msg = "User with id/username %s does not exist" % id
         LOG.error(error_msg)
         raise exceptions.NotFound(error_msg)
     return jsonify(user.to_json())
