@@ -108,4 +108,4 @@ class TestSsh(base.Base):
 
     def get(self, user_id, ssh_id):
         url = self.url + '/users/%s/ssh/%s' % (user_id, ssh_id)
-        return  requests.get(url)
+        return requests.get(url)
