@@ -87,7 +87,9 @@ def user_delete(id):
         return error_msg
     models.User.query.filter_by(id=id).delete()
     base.session.commit()
-    return 'User was deleted successfully', 200
+    return jsonify({
+        'msg': 'User was deleted successfully',
+        'status_code': 200})
 
 
 @mydev.route('/users/<user_id>/ssh', methods=['POST'], strict_slashes=False)
@@ -138,7 +140,9 @@ def ssh_delete(user_id, ssh_id):
     models.Ssh.query.filter_by(user_id=user_id,
                                id=ssh_id).delete()
     base.session.commit()
-    return 'Ssh was deleted successfully', 200
+    return jsonify({
+        'msg': 'Ssh was deleted successfully',
+        'status_code': 200})
 
 
 @mydev.errorhandler(exceptions.Duplicate)
