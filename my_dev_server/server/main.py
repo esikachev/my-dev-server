@@ -129,7 +129,9 @@ def ssh_get(user_id, ssh):
 
     if ssh_by_host is not None:
         return jsonify(ssh_by_host.to_json())
-    return jsonify(ssh_by_id.to_json())
+    elif ssh_by_id is not None:
+        return jsonify(ssh_by_id.to_json())
+    raise exceptions.NotFound('Ssh not found', status_code=404)
 
 
 @mydev.route('/users/<user_id>/ssh/<ssh_id>', methods=['DELETE'])
