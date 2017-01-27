@@ -19,12 +19,13 @@ config.parse_config()
 CONF = cfg.CONF
 
 mydev = Flask(__name__)
+mydev.url_map.strict_slashes = False
 
 USER_EXIST_MSG = "User exist"
 SSH_EXIST_MSG = "SSH exist"
 
 
-@mydev.route('/users', methods=['POST'], strict_slashes=False)
+@mydev.route('/users', methods=['POST'])
 def user_create():
     try:
         username = request.json["username"]
@@ -65,7 +66,7 @@ def user_create():
     return user_json
 
 
-@mydev.route('/users/<id>', methods=['GET'], strict_slashes=False)
+@mydev.route('/users/<id>', methods=['GET'])
 def user_get(id):
     LOG.info('%s %s' % (request.method, id))
     user = models.User.query.filter(or_(models.User.id == id,
@@ -77,7 +78,7 @@ def user_get(id):
     return jsonify(user.to_json())
 
 
-@mydev.route('/users/<id>', methods=['DELETE'], strict_slashes=False)
+@mydev.route('/users/<id>', methods=['DELETE'])
 def user_delete(id):
     LOG.info('%s %s' % (request.method, id))
     user = models.User.query.filter_by(id=id).first()
@@ -92,7 +93,7 @@ def user_delete(id):
         'status_code': 200})
 
 
-@mydev.route('/users/<user_id>/ssh', methods=['POST'], strict_slashes=False)
+@mydev.route('/users/<user_id>/ssh', methods=['POST'])
 def create_ssh(user_id):
     new_ssh = models.Ssh(
         user_id=user_id,
@@ -117,8 +118,7 @@ def create_ssh(user_id):
     return jsonify(new_ssh.to_json())
 
 
-@mydev.route('/users/<user_id>/ssh/<ssh>',
-             methods=['GET'], strict_slashes=False)
+@mydev.route('/users/<user_id>/ssh/<ssh>', methods=['GET'])
 def ssh_get(user_id, ssh):
     # TODO (imenkov) here need to add checking that user authorized
     LOG.info('%s %s' % (request.method, ssh))
@@ -132,8 +132,7 @@ def ssh_get(user_id, ssh):
     return jsonify(ssh_by_id.to_json())
 
 
-@mydev.route('/users/<user_id>/ssh/<ssh_id>',
-             methods=['DELETE'], strict_slashes=False)
+@mydev.route('/users/<user_id>/ssh/<ssh_id>', methods=['DELETE'])
 def ssh_delete(user_id, ssh_id):
     # TODO (imenkov) here need to add checking that user authorized
     LOG.info('%s %s' % (request.method, ssh_id))
