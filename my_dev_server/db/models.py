@@ -40,7 +40,7 @@ class Ssh(base.Base):
     id = sql.Column(sql.Integer, primary_key=True)
     user_id = sql.Column(sql.Integer, sql.ForeignKey('users.id'))
     alias = sql.Column(sql.String(length=30))
-    host = sql.Column(sql.String(length=10))
+    host = sql.Column(sql.String(length=30))
     ssh_username = sql.Column(sql.String(length=20))
     ssh_password = sql.Column(sql.String(length=30))
 
