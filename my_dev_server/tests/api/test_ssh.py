@@ -102,7 +102,7 @@ class TestSsh(base.Base):
 
         self.assertEqual(200, new_ssh.status_code)
         exist_ssh = requests.post(url, json=data)
-        self.assertEqual(400, exist_ssh.status_code)
+        self.assertEqual(409, exist_ssh.status_code)
         self._delete_ssh(user, new_ssh.json())
         self._delete_user(user)
 

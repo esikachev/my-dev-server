@@ -63,7 +63,7 @@ class TestUsers(base.Base):
         """Scenario:
           - create user
           - Try to create user with existing username
-          - Check that exit code correct (400)
+          - Check that exit code correct (409)
           - delete user
         """
         user = self._create_user(
@@ -74,7 +74,7 @@ class TestUsers(base.Base):
             'username',
             utils.rand_name('email'),
             utils.rand_name('pass'),
-            expected_code=400)
+            expected_code=409)
         self._delete_user(user)
 
     def test_create_user_without_username(self):
@@ -137,7 +137,7 @@ class TestUsers(base.Base):
         """Scenario:
           - create user
           - Try to create user with existing email
-          - Check that exit code correct (400)
+          - Check that exit code correct (409)
           - delete user
         """
         user = self._create_user(
@@ -148,5 +148,5 @@ class TestUsers(base.Base):
             utils.rand_name('username'),
             'email',
             utils.rand_name('pass'),
-            expected_code=400)
+            expected_code=409)
         self._delete_user(user)
