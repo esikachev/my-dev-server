@@ -1,7 +1,7 @@
 [DEFAULT]
 debug=False
 host=0.0.0.0
-log_dir=/Users/alina/my-dev-server/logs
+log_dir=/var/log/my-dev-server
 db_url=mysql+pymysql://root@localhost/my_dev
 MINIMAL_PASSWORD_LEN = 5
 MINIMAL_USERNAME_LEN = 2
