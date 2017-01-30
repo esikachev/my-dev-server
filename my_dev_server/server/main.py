@@ -1,7 +1,6 @@
 from flask import Flask
 from flask import jsonify
 from flask import request
-from sqlalchemy import exists
 from sqlalchemy import or_
 from oslo_config import cfg
 
@@ -85,7 +84,7 @@ def user_delete(id):
     if user is None:
         error_msg = "Can not delete user %s: it does't exist" % id
         LOG.error(error_msg)
-        return error_msg
+        raise exceptions.NotFound(error_msg)
     models.User.query.filter_by(id=id).delete()
     base.session.commit()
     return jsonify({
@@ -131,7 +130,7 @@ def ssh_get(user_id, ssh):
         return jsonify(ssh_by_host.to_json())
     elif ssh_by_id is not None:
         return jsonify(ssh_by_id.to_json())
-    raise exceptions.NotFound('Ssh not found', status_code=404)
+    raise exceptions.NotFound('Ssh not found')
 
 
 @mydev.route('/users/<user_id>/ssh/<ssh_id>', methods=['DELETE'])
@@ -149,28 +148,28 @@ def ssh_delete(user_id, ssh_id):
 @mydev.errorhandler(exceptions.Duplicate)
 def handle_duplicate(error):
     response = jsonify(error.to_dict())
-    response.status_code = error.status_code
+    response.status_code = 409
     return response
 
 
 @mydev.errorhandler(exceptions.NotFound)
-def handle_duplicate(error):
+def handle_not_found(error):
     response = jsonify(error.to_dict())
-    response.status_code = error.status_code
+    response.status_code = 404
     return response
 
 
 @mydev.errorhandler(exceptions.LengthRequired)
-def handle_duplicate(error):
+def handle_length_required(error):
     response = jsonify(error.to_dict())
-    response.status_code = error.status_code
+    response.status_code = 411
     return response
 
 
 @mydev.errorhandler(exceptions.BadRequest)
-def handle_duplicate(error):
+def handle_bad_request(error):
     response = jsonify(error.to_dict())
-    response.status_code = error.status_code
+    response.status_code = 400
     return response
 
 
