@@ -61,4 +61,4 @@ target/
 .idea/
 
 # Configs
-etc/my-dev-server/my-dev-server.conf
+etc/my-dev-server/my-dev-server.conf.sample
