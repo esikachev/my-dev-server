@@ -74,7 +74,13 @@ class TestSsh(base.Base):
         self.assertEqual(ssh['ssh_username'], get_ssh_by_host['ssh_username'])
         self.assertEqual(ssh['host'], get_ssh_by_host['host'])
 
+        get_ssh_by_alias = get_ssh_by_alias.json()
+        self.assertEqual(ssh['id'], get_ssh_by_host['id'])
+        self.assertEqual(ssh['alias'], get_ssh_by_host['alias'])
+        self.assertEqual(ssh['ssh_username'], get_ssh_by_host['ssh_username'])
+        self.assertEqual(ssh['host'], get_ssh_by_host['host'])
         self._delete_ssh(user, ssh)
+
         self._delete_user(user)
 
     def test_create_exist_ssh(self):
