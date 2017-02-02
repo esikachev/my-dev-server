@@ -14,68 +14,36 @@ class TestSsh(base.Base):
           - delete ssh
           - delete user
         """
-        user = self._create_user(
-            utils.rand_name('user'),
-            utils.rand_name('email'),
-            utils.rand_name('pass'))
-        data = {
-            "user_id": user['id'],
-            "alias": utils.rand_name('alias'),
-            "host": utils.rand_name(''),
-            "ssh_username": utils.rand_name('username'),
-            "ssh_password": utils.rand_name('pass')
-        }
-        url = self.url + '/users/%s/ssh' % user['id']
-        new_ssh = requests.post(url, json=data)
+        user = self.create_user()
 
-        self.assertEqual(200, new_ssh.status_code)
-        new_ssh = new_ssh.json()
-        self.assertEqual(data['user_id'], new_ssh['user_id'])
-        self.assertEqual(data['alias'], new_ssh['alias'])
-        self.assertEqual(data['host'], new_ssh['host'])
-        self.assertEqual(data['ssh_username'], new_ssh['ssh_username'])
-        self.assertEqual(data['ssh_password'], new_ssh['ssh_password'])
+        ssh = self.create_ssh(user['id'])
 
-        url = self.url + '/users/%s/ssh/%s' % (
-            user['id'],
-            new_ssh['id'])
-        request = requests.delete(url)
-        self.assertEqual(200, request.status_code)
-        self._delete_user(user)
+        self.check_response(data, ssh)
+
+        self.delete_user(user['id'], ssh['id'])
 
     def test_get_ssh(self):
         """Scenario:
           - create user
           - create new ssh
-          - get ssh
+          - get ssh by id
+          - get ssh by host
           - check that ssh is correct
           - delete ssh
           - delete user
         """
-        user = self._create_user(
-            utils.rand_name('user'),
-            utils.rand_name('email'),
-            utils.rand_name('pass'))
-        ssh = self._create_ssh(user)
-        get_ssh = self.get(user['id'], ssh['id'])
-        self.assertEqual(200, get_ssh.status_code)
+        user = self.create_user()
+        
+        ssh = self.create_ssh(user['id'])
+        
+        get_ssh_by_id = self.get_ssh(user['id'], ssh['id'])
+        self.check_response(ssh, get_ssh_by_id)
 
-        get_ssh_by_host = self.get(user['id'], ssh['host'])
-        self.assertEqual(200, get_ssh_by_host.status_code)
-        get_ssh = get_ssh.json()
-        self.assertEqual(ssh['id'], get_ssh['id'])
-        self.assertEqual(ssh['alias'], get_ssh['alias'])
-        self.assertEqual(ssh['ssh_username'], get_ssh['ssh_username'])
-        self.assertEqual(ssh['host'], get_ssh['host'])
+        get_ssh_by_host = self.get_ssh(user['id'], ssh['host'])
+        self.check_response(ssh, get_ssh_by_host)
 
-        get_ssh_by_host = get_ssh_by_host.json()
-        self.assertEqual(ssh['id'], get_ssh_by_host['id'])
-        self.assertEqual(ssh['alias'], get_ssh_by_host['alias'])
-        self.assertEqual(ssh['ssh_username'], get_ssh_by_host['ssh_username'])
-        self.assertEqual(ssh['host'], get_ssh_by_host['host'])
-
-        self._delete_ssh(user, ssh)
-        self._delete_user(user)
+        self.delete_ssh(user, ssh)
+        self.delete_user(user)
 
     def test_create_exist_ssh(self):
         """Scenario:
@@ -86,26 +54,20 @@ class TestSsh(base.Base):
           - delete ssh
           - delete user
         """
-        user = self._create_user(
-            utils.rand_name('user'),
-            utils.rand_name('email'),
-            utils.rand_name('pass'))
-        data = {
-            "user_id": user['id'],
-            "alias": utils.rand_name('alias'),
-            "host": utils.rand_name(''),
-            "ssh_username": utils.rand_name('username'),
-            "ssh_password": utils.rand_name('ssh_pass')
-        }
-        url = self.url + '/users/%s/ssh' % user['id']
-        new_ssh = requests.post(url, json=data)
+        user = self.create_user()
 
-        self.assertEqual(200, new_ssh.status_code)
-        exist_ssh = requests.post(url, json=data)
-        self.assertEqual(409, exist_ssh.status_code)
-        self._delete_ssh(user, new_ssh.json())
-        self._delete_user(user)
+        data = self.create_ssh(user['id'])
+        
+        ssh.update({'expected_code': 409})
+        exist_ssh = self.create_ssh(**ssh)
 
-    def get(self, user_id, ssh_id):
-        url = self.url + '/users/%s/ssh/%s' % (user_id, ssh_id)
-        return requests.get(url)
+        self.delete_ssh(user, new_ssh.json())
+        self.delete_user(user)
+
+    def check_response(self, data, ssh):
+        self.assertEqual(data['user_id'], ssh['user_id'])
+        self.assertEqual(data['alias'], ssh['alias'])
+        self.assertEqual(data['host'], ssh['host'])
+        self.assertEqual(data['ssh_username'], ssh['ssh_username'])
+        self.assertEqual(data['ssh_password'], ssh['ssh_password'])
+
