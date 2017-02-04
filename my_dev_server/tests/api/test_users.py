@@ -11,7 +11,7 @@ class TestUsers(base.Base):
           - create user
           - delete user
         """
-        user = self.create_user()
+        data, user = self.create_user()
         self.delete_user(user['id'])
 
     def test_get_user(self):
@@ -20,7 +20,7 @@ class TestUsers(base.Base):
           - get user
           - delete user
         """
-        user = self.create_user()
+        data, user = self.create_user()
         get_user = self.get_user(user['id'])
         
         self.check_response(user, get_user)
@@ -41,9 +41,9 @@ class TestUsers(base.Base):
           - Check that exit code correct (409)
           - delete user
         """
-        user = self.create_user('username')
-        self.create_user('username', expected_code=409)
-        self.delete_user(user)
+        data, user = self.create_user(username='username')
+        self.create_user(username='username', expected_code=409)
+        self.delete_user(user['id'])
 
     def test_create_user_without_username(self):
         """Scenario:
@@ -51,8 +51,9 @@ class TestUsers(base.Base):
           - Check that exit code correct (400)
           - Check that error message is correct
         """
-        self.create_user(username=None, error_msg='Please provide: username, '
-                                                  'password and email')
+        self.create_user(remove_field='username', expected_code=400,
+                         error_msg='Please provide: username, password and '
+                                   'email')
 
     def test_create_user_not_correct_creds(self):
         """Scenario:
@@ -82,7 +83,7 @@ class TestUsers(base.Base):
           - Check that exit code correct (409)
           - delete user
         """
-        user = self.create_user(email='email')
+        data, user = self.create_user(email='email')
         self.create_user(email='email', expected_code=409)
         self.delete_user(user['id'])
 

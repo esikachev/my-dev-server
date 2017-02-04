@@ -14,13 +14,14 @@ class TestSsh(base.Base):
           - delete ssh
           - delete user
         """
-        user = self.create_user()
+        user_data, user = self.create_user()
 
-        ssh = self.create_ssh(user['id'])
+        ssh_data, ssh = self.create_ssh(user['id'])
 
-        self.check_response(data, ssh)
+        self.check_response(ssh_data, ssh)
 
-        self.delete_user(user['id'], ssh['id'])
+        self.delete_ssh(user['id'], ssh['id'])
+        self.delete_user(user['id'])
 
     def test_get_ssh(self):
         """Scenario:
@@ -32,9 +33,9 @@ class TestSsh(base.Base):
           - delete ssh
           - delete user
         """
-        user = self.create_user()
+        user_data, user = self.create_user()
         
-        ssh = self.create_ssh(user['id'])
+        ssh_data, ssh = self.create_ssh(user['id'])
         
         get_ssh_by_id = self.get_ssh(user['id'], ssh['id'])
         self.check_response(ssh, get_ssh_by_id)
@@ -42,8 +43,8 @@ class TestSsh(base.Base):
         get_ssh_by_host = self.get_ssh(user['id'], ssh['host'])
         self.check_response(ssh, get_ssh_by_host)
 
-        self.delete_ssh(user, ssh)
-        self.delete_user(user)
+        self.delete_ssh(user['id'], ssh['id'])
+        self.delete_user(user['id'])
 
     def test_create_exist_ssh(self):
         """Scenario:
@@ -54,15 +55,18 @@ class TestSsh(base.Base):
           - delete ssh
           - delete user
         """
-        user = self.create_user()
+        user_data, user = self.create_user()
 
-        data = self.create_ssh(user['id'])
-        
-        ssh.update({'expected_code': 409})
-        exist_ssh = self.create_ssh(**ssh)
+        ssh_data, ssh = self.create_ssh(user['id'])
 
-        self.delete_ssh(user, new_ssh.json())
-        self.delete_user(user)
+        new_ssh = dict()
+        new_ssh.update(ssh)
+        del new_ssh['id']
+        new_ssh.update({'expected_code': 409})
+        self.create_ssh(**new_ssh)
+
+        self.delete_ssh(user['id'], ssh['id'])
+        self.delete_user(user['id'])
 
     def check_response(self, data, ssh):
         self.assertEqual(data['user_id'], ssh['user_id'])
@@ -70,4 +74,3 @@ class TestSsh(base.Base):
         self.assertEqual(data['host'], ssh['host'])
         self.assertEqual(data['ssh_username'], ssh['ssh_username'])
         self.assertEqual(data['ssh_password'], ssh['ssh_password'])
-

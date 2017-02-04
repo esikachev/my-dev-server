@@ -17,17 +17,19 @@ class Base(testtools.TestCase):
     def create_user(self, username=utils.rand_name('username'),
                     password=utils.rand_name('password'),
                     email=utils.rand_name('email'), expected_code=200,
-                    error_msg=None):
+                    error_msg=None, remove_field=None):
         data = {
             "username": username,
             "password": password,
             "email": email
         }
+        if remove_field:
+            del data[remove_field]
         user = requests.post(self.users_base_url, json=data)
         self.assertEqual(expected_code, user.status_code)
         if error_msg:
-            self.assertEqual(error_msg, user.message)
-        return user.json()
+            self.assertIn(error_msg, user.text)
+        return data, user.json()
 
     def get_user(self, user_id, expected_code=200):
         url = self.users_url % user_id
@@ -42,27 +44,26 @@ class Base(testtools.TestCase):
 
     def create_ssh(self, user_id, alias=utils.rand_name('alias'),
                    host=utils.rand_name('host'),
-                   username=utils.rand_name('username'),
-                   password=utils.rand_name('password'),
+                   ssh_username=utils.rand_name('username'),
+                   ssh_password=utils.rand_name('password'),
                    expected_code=200):
         data = {
             "user_id": user_id,
             "alias": alias,
             "host": host,
-            "ssh_username": username,
-            "ssh_password": password
+            "ssh_username": ssh_username,
+            "ssh_password": ssh_password
         }
         url = self.ssh_base_url % user_id
-        new_ssh = requests.post(url, json=data)
-        self.assertEqual(expected_code, request.status_code)
-        return new_ssh.json()
+        ssh = requests.post(url, json=data)
+        self.assertEqual(expected_code, ssh.status_code)
+        return data, ssh.json()
     
     def get_ssh(self, user_id, ssh_id, expected_code=200):
         url = self.ssh_url % (user_id, ssh_id)
         request = requests.get(url)
         self.assertEqual(expected_code, request.status_code)
         return request.json()
-
 
     def delete_ssh(self, user_id, ssh_id, expected_code=200):
         url = self.ssh_url % (user_id, ssh_id)
