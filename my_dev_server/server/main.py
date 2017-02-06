@@ -125,11 +125,15 @@ def ssh_get(user_id, ssh):
                                            id=ssh).first()
     ssh_by_host = models.Ssh.query.filter_by(user_id=user_id,
                                              host=ssh).first()
+    ssh_by_alias = models.Ssh.query.filter_by(user_id=user_id,
+                                              alias=ssh).first()
 
     if ssh_by_host is not None:
         return jsonify(ssh_by_host.to_json())
     elif ssh_by_id is not None:
         return jsonify(ssh_by_id.to_json())
+    elif ssh_by_alias is not None:
+        return jsonify(ssh_by_alias.to_json())
     raise exceptions.NotFound('Ssh not found')
 
 

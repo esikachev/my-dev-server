@@ -43,6 +43,9 @@ class TestSsh(base.Base):
         get_ssh_by_host = self.get_ssh(user['id'], ssh['host'])
         self.check_response(ssh, get_ssh_by_host)
 
+        get_ssh_by_alias = self.get(user['id'], ssh['alias'])
+        self.check_response(ssh, get_ssh_by_alias)
+  
         self.delete_ssh(user['id'], ssh['id'])
         self.delete_user(user['id'])
 
