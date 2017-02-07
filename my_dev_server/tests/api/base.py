@@ -18,7 +18,7 @@ class Base(testtools.TestCase):
             "email": email,
             "password": password
         }
-        user = requests.post(url, json=data)
+        user = self.post(url, data)
         self.assertEqual(expected_code, user.status_code)
         return user.json()
 
@@ -47,7 +47,7 @@ class Base(testtools.TestCase):
             "ssh_password": utils.rand_name(password)
         }
         url = self.url + '/users/%s/ssh' % user['id']
-        new_ssh = requests.post(url, json=data)
+        new_ssh = self.post(url, json=data)
 
         self.assertEqual(expected_code, new_ssh.status_code)
         return new_ssh.json()
@@ -56,3 +56,7 @@ class Base(testtools.TestCase):
         url = self.url + '/users/%s/ssh/%s' % (user['id'], ssh['id'])
         request = requests.delete(url)
         self.assertEqual(200, request.status_code)
+
+    def post(self, url, data=None):
+        request = requests.post(url, json=data)
+        self.addCleanup(response.delete, '%s/%s' % (url, request['id']))
