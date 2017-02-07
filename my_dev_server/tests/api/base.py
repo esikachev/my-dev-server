@@ -59,4 +59,4 @@ class Base(testtools.TestCase):
 
     def post(self, url, data=None):
         request = requests.post(url, json=data)
-        self.addCleanup(response.delete, '%s/%s' % (url, request['id']))
+        self.addCleanup(rquests.delete, '%s/%s' % (url, request['id']))
