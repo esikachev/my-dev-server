@@ -64,7 +64,7 @@ class TestUsers(base.Base):
           - create user with not correct email
           - check that exit code and message are correct
         """
-        self.create_user(username=utils.rand_name(length=2),
+        self.create_user(username=utils.rand_name(length=1),
                          error_msg='Username len required > 2',
                          expected_code=411)
 
