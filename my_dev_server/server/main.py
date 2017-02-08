@@ -104,7 +104,7 @@ def create_ssh(user_id):
     # TODO (imenkov) here need to add checking that user authorized
     ssh_exist = models.Ssh.query.filter_by(
         host=new_ssh.host,
-        ssh_username=new_ssh.ssh_username).all()
+        ssh_username=new_ssh.ssh_username, user_id=user_id).all()
 
     if ssh_exist:
         error_msg = "%s for host: %s" % (SSH_EXIST_MSG,
