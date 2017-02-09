@@ -8,51 +8,64 @@ class Base(testtools.TestCase):
 
     def setUp(self):
         super(Base, self).setUp()
-        self.url = 'http://localhost:5000'
+        url = 'http://localhost:5000'
+        self.users_base_url = url + '/users'
+        self.users_url = self.users_base_url + '/%s'
+        self.ssh_base_url = url + '/users/%s/ssh'
+        self.ssh_url = self.ssh_base_url + '/%s'
 
-    def _create_user(self, username, email, password,
-                     expected_code=200):
-        url = self.url + '/users'
+    def create_user(self, username=utils.rand_name('username'),
+                    password=utils.rand_name('password'),
+                    email=utils.rand_name('email'), expected_code=200,
+                    error_msg=None, remove_field=None):
         data = {
             "username": username,
-            "email": email,
-            "password": password
+            "password": password,
+            "email": email
         }
-        user = requests.post(url, json=data)
+        if remove_field:
+            del data[remove_field]
+        user = requests.post(self.users_base_url, json=data)
         self.assertEqual(expected_code, user.status_code)
-        return user.json()
+        if error_msg:
+            self.assertIn(error_msg, user.text)
+        return data, user.json()
 
-    def _get_user(self, user, expected_code=200):
-        url = self.url + '/users/%s' % user['id']
+    def get_user(self, user_id, expected_code=200):
+        url = self.users_url % user_id
         get_user = requests.get(url)
         self.assertEqual(expected_code, get_user.status_code)
         return get_user.json()
 
-    def _delete_user(self, user):
-        url = self.url + '/users/%s' % user['id']
+    def delete_user(self, user_id, expected_code=200):
+        url = self.users_url % user_id
         request = requests.delete(url)
-        self.assertEqual(200, request.status_code)
+        self.assertEqual(expected_code, request.status_code)
 
-    def _create_ssh(self, user,
-                    alias='alias',
-                    host='',
-                    username='username',
-                    password='pass',
-                    expected_code=200):
+    def create_ssh(self, user_id, alias=utils.rand_name('alias'),
+                   host=utils.rand_name('host'),
+                   ssh_username=utils.rand_name('username'),
+                   ssh_password=utils.rand_name('password'),
+                   expected_code=200):
         data = {
-            "user_id": user['id'],
-            "alias": utils.rand_name(alias),
-            "host": utils.rand_name(host),
-            "ssh_username": utils.rand_name(username),
-            "ssh_password": utils.rand_name(password)
+            "user_id": user_id,
+            "alias": alias,
+            "host": host,
+            "ssh_username": ssh_username,
+            "ssh_password": ssh_password
         }
-        url = self.url + '/users/%s/ssh' % user['id']
-        new_ssh = requests.post(url, json=data)
+        url = self.ssh_base_url % user_id
+        ssh = requests.post(url, json=data)
+        self.assertEqual(expected_code, ssh.status_code)
+        return data, ssh.json()
+    
+    def get_ssh(self, user_id, ssh_id, expected_code=200):
+        url = self.ssh_url % (user_id, ssh_id)
+        request = requests.get(url)
+        self.assertEqual(expected_code, request.status_code)
+        return request.json()
 
-        self.assertEqual(expected_code, new_ssh.status_code)
-        return new_ssh.json()
-
-    def _delete_ssh(self, user, ssh):
-        url = self.url + '/users/%s/ssh/%s' % (user['id'], ssh['id'])
+    def delete_ssh(self, user_id, ssh_id, expected_code=200):
+        url = self.ssh_url % (user_id, ssh_id)
         request = requests.delete(url)
-        self.assertEqual(200, request.status_code)
+        self.assertEqual(expected_code, request.status_code)
