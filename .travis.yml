@@ -1,7 +1,7 @@
 language: python
 
 before_install:
-  - git clone https://github.com/esikachev/my-dev-ci-config.git
+  - git clone https://github.com/esikachev/my-dev-ci-config.git -b feature
 
 services:
   - mysql
