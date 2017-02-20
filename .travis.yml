@@ -23,6 +23,9 @@ matrix:
     - python: 2.7
       env: TOX_ENV=functional-client
       sudo: required
+    - python: 2.7
+      env: TOX_ENV=cli-client
+      sudo: required
 
 script:
   - my-dev-ci-config/runner.sh
