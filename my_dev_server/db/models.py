@@ -12,7 +12,6 @@ class User(base.Base):
     __tablename__ = 'users'
 
     id = sql.Column(sql.Integer, primary_key=True)
-    
     username = sql.Column(sql.String(length=20), nullable=False)
     email = sql.Column(sql.String(length=30), nullable=False)
     password = sql.Column(sql.String(length=30), nullable=False)

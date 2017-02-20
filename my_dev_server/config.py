@@ -31,4 +31,3 @@ def list_opts():
 
 def parse_config():
     CONF(project='my-dev-server', default_config_files=sys.argv[2:])
-
