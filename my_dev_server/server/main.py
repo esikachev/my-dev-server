@@ -20,8 +20,9 @@ CONF = cfg.CONF
 mydev = Flask(__name__)
 mydev.url_map.strict_slashes = False
 
-USER_EXIST_MSG = "User exist"
-SSH_EXIST_MSG = "SSH exist"
+EXIST_MSG = "exist"
+USER_EXIST_MSG = "User %s" % EXIST_MSG
+SSH_EXIST_MSG = "SSH %s" % EXIST_MSG
 
 
 @mydev.route('/users', methods=['POST'])
@@ -146,6 +147,47 @@ def ssh_delete(user_id, ssh_id):
     base.session.commit()
     return jsonify({
         'msg': 'Ssh was deleted successfully',
+        'status_code': 200})
+
+
+@mydev.route('/users/<user_id>/git', methods=['POST'])
+def create_git(user_id):
+    new_git = models.Git(
+        user_id=user_id,
+        git_username=request.json['git_username'],
+        git_password=request.json['git_password'])
+
+    git_exist = models.Git.query.filter_by(
+        git_username=new_git.git_username, user_id=user_id).all()
+
+    if git_exist:
+        error_msg = "%s for user: %s" % (GIT_EXIST_MSG, str(user_id))
+        LOG.error(error_msg)
+        raise exceptions.Duplicate(error_msg)
+
+    base.session.add(new_git)
+    base.session.commit()
+    return jsonify(new_git.to_json())
+
+
+@mydev.route('/users/<user_id>/git/<git>', methods=['GET'])
+def git_get(user_id, git):
+    LOG.info('%s %s' % (request.method, git))
+    git = models.Git.query.filter_by(user_id=user_id).first()
+
+    if git is not None:
+        return jsonify(git.to_json())
+    raise exceptions.NotFound('Git not found')
+
+
+@mydev.route('/users/<user_id>/git/<git_id>', methods=['DELETE'])
+def git_delete(user_id, git_id):
+    LOG.info('%s %s' % (request.method, git_id))
+    models.Git.query.filter_by(user_id=user_id,
+                               id=git_id).delete()
+    base.session.commit()
+    return jsonify({
+        'msg': 'Git was deleted successfully',
         'status_code': 200})
 
 

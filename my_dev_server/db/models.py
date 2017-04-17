@@ -62,3 +62,26 @@ class Ssh(base.Base):
                     host=self.host,
                     ssh_username=self.ssh_username,
                     ssh_password=self.ssh_password)
+
+
+class Git(base.Base):
+    __tablename__ = 'git'
+
+    id = sql.Column(sql.Integer, primary_key=True)
+    user_id = sql.Column(sql.Integer, sql.ForeignKey('users.id'))
+    git_username = sql.Column(sql.String(length=20))
+    git_password = sql.Column(sql.String(length=30))
+
+    def __init__(self, user_id=None, git_username=None, git_password=None):
+        self.user_id = user_id
+        self.git_username = git_username
+        self.git_password = git_password
+
+    def __repr__(self):
+        return '<GIT %r>' % (self.id)
+
+    def to_json(self):
+        return dict(id=self.id,
+                    user_id=self.user_id,
+                    git_username=self.git_username,
+                    git_password=self.git_password)
