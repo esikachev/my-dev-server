@@ -1,10 +1,19 @@
 language: python
 
 before_install:
-  - git clone https://github.com/esikachev/my-dev-ci-config.git
+  - pip install tox
+  - git clone -b es-macosx-server https://github.com/esikachev/my-dev-ci-config.git
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS my_dev;'
 
-services:
-  - mysql
+os:
+  - linux
+  - osx
+
+addons:
+  apt:
+    packages:
+      - mysql-server
+  brew_packages: mysql
 
 matrix:
   include:
